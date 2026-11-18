@@ -174,7 +174,7 @@ footer {
     <h2>Vielen Dank! 🎉</h2>
 
     <p>
-        Deine Antworten wurden erfolgreich übermittelt.
+        Deine Antworten wurden übermittelt.
     </p>
 
     <button onclick="newSurvey()" class="secondary">
@@ -312,7 +312,7 @@ const questions = [
 ];
 
 // ==========================================
-// FRAGEN ERSTELLEN
+// FRAGEN ANZEIGEN
 // ==========================================
 
 const questionContainer =
@@ -326,7 +326,7 @@ questions.forEach((q, index) => {
     const title = document.createElement("h3");
 
     title.textContent =
-    (index + 1) + ". " + q.title;
+        (index + 1) + ". " + q.title;
 
     section.appendChild(title);
 
@@ -357,20 +357,21 @@ questions.forEach((q, index) => {
 });
 
 // ==========================================
-// UMFRAGE ABSENDEN
+// UMFRAGE ABSENDEN OHNE NO-CORS
 // ==========================================
 
 document.getElementById("survey")
-.addEventListener("submit", async function(e) {
+.addEventListener("submit", function(e) {
 
     e.preventDefault();
 
     const form = this;
+
     const submitButton =
-    document.getElementById("submitButton");
+        document.getElementById("submitButton");
 
     const status =
-    document.getElementById("status");
+        document.getElementById("status");
 
     const formData = new FormData(form);
 
@@ -379,7 +380,9 @@ document.getElementById("survey")
     );
 
     if (answers.some(answer => !answer)) {
+
         alert("Bitte beantworte alle Fragen.");
+
         return;
     }
 
@@ -387,52 +390,56 @@ document.getElementById("survey")
     submitButton.textContent = "Wird gesendet...";
 
     status.style.display = "none";
-    status.textContent = "";
-    status.className = "status";
 
-    try {
+    // Unsichtbares iframe erstellen
+    const iframe = document.createElement("iframe");
 
-        await fetch(SCRIPT_URL, {
+    iframe.name = "googleResponse";
+    iframe.style.display = "none";
 
-            method: "POST",
+    document.body.appendChild(iframe);
 
-            mode: "no-cors",
+    // Formular für Google Apps Script
+    const hiddenForm = document.createElement("form");
 
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
+    hiddenForm.method = "POST";
+    hiddenForm.action = SCRIPT_URL;
+    hiddenForm.target = "googleResponse";
+    hiddenForm.style.display = "none";
 
-            body: JSON.stringify({
-                answers: answers
-            })
+    // Antworten als JSON übertragen
+    const input = document.createElement("input");
 
-        });
+    input.type = "hidden";
+    input.name = "payload";
 
-        // Bei no-cors ist die Antwort nicht lesbar.
-        // Der Browser kann daher den tatsächlichen
-        // Speichervorgang nicht bestätigen.
+    input.value = JSON.stringify({
+        answers: answers
+    });
 
-        document.getElementById("survey")
+    hiddenForm.appendChild(input);
+
+    document.body.appendChild(hiddenForm);
+
+    // Formular absenden
+    hiddenForm.submit();
+
+    // Hinweis anzeigen
+    document.getElementById("survey")
         .classList.add("hidden");
 
-        document.getElementById("success")
+    document.getElementById("success")
         .classList.remove("hidden");
 
-        window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-    } catch (error) {
+    // Aufräumen
+    setTimeout(() => {
 
-        status.textContent =
-        "Die Übertragung ist fehlgeschlagen. Bitte versuche es erneut.";
+        hiddenForm.remove();
+        iframe.remove();
 
-        status.classList.add("error");
-
-        submitButton.disabled = false;
-
-        submitButton.textContent =
-        "Umfrage absenden";
-
-    }
+    }, 15000);
 
 });
 
@@ -443,25 +450,25 @@ document.getElementById("survey")
 function newSurvey() {
 
     const form =
-    document.getElementById("survey");
+        document.getElementById("survey");
 
     form.reset();
 
     form.classList.remove("hidden");
 
     document.getElementById("success")
-    .classList.add("hidden");
+        .classList.add("hidden");
 
     document.getElementById("status")
-    .style.display = "none";
+        .style.display = "none";
 
     const submitButton =
-    document.getElementById("submitButton");
+        document.getElementById("submitButton");
 
     submitButton.disabled = false;
 
     submitButton.textContent =
-    "Umfrage absenden";
+        "Umfrage absenden";
 
     window.scrollTo(0, 0);
 
