@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sport Schulumfrage</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2563eb;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 9px;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #success {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 9px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🏃 Sport-Schulumfrage</h1>
+
+    <p class="subtitle">
+      Hilf uns, den Sportunterricht an unserer Schule zu verbessern!
+    </p>
+
+    <form id="survey">
+
+      <label for="class">In welcher Klasse bist du?</label>
+      <select id="class" required>
+        <option value="">Bitte auswählen</option>
+        <option>5. Klasse</option>
+        <option>6. Klasse</option>
+        <option>7. Klasse</option>
+        <option>8. Klasse</option>
+        <option>9. Klasse</option>
+        <option>10. Klasse</option>
+        <option>11. Klasse</option>
+        <option>12. Klasse</option>
+        <option>13. Klasse</option>
+      </select>
+
+      <label>Wie findest du den Sportunterricht?</label>
+      <select id="rating" required>
+        <option value="">Bitte auswählen</option>
+        <option>Sehr gut</option>
+        <option>Gut</option>
+        <option>Okay</option>
+        <option>Schlecht</option>
+        <option>Sehr schlecht</option>
+      </select>
+
+      <label>Welche Sportarten machst du am liebsten?</label>
+      <input id="sports" type="text"
+        placeholder="z. B. Fußball, Basketball, Volleyball">
+
+      <label>Was würdest du am Sportunterricht ändern?</label>
+      <textarea id="changes" rows="4"
+        placeholder="Deine Antwort..."></textarea>
+
+      <label>Wie oft sollte Sport in der Woche stattfinden?</label>
+      <select id="frequency" required>
+        <option value="">Bitte auswählen</option>
+        <option>1 Stunde</option>
+        <option>2 Stunden</option>
+        <option>3 Stunden</option>
+        <option>4 Stunden oder mehr</option>
+      </select>
+
+      <button type="submit">Umfrage abschicken</button>
+
+    </form>
+
+    <div id="success">
+      Danke für deine Teilnahme! 💙
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("survey").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      document.getElementById("survey").style.display = "none";
+      document.getElementById("success").style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
