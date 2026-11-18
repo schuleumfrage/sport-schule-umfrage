@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Umfrage – Leistungssport und Schule</title>
 
 <style>
@@ -111,6 +112,20 @@ footer {
     color: #66758a;
     font-size: 13px;
 }
+
+.status {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
 </style>
 </head>
 
@@ -125,14 +140,17 @@ footer {
 
 <section class="intro">
     <h2>Deine Meinung ist gefragt!</h2>
+
     <p>
         Diese Umfrage ist anonym und dauert ungefähr
         3–5 Minuten.
     </p>
+
     <p>
         Die Ergebnisse werden ausschließlich für eine
         schulische Projektarbeit verwendet.
     </p>
+
     <strong>Bitte beantworte alle Fragen ehrlich.</strong>
 </section>
 
@@ -140,14 +158,25 @@ footer {
 
 <div id="questions"></div>
 
-<button type="submit">Umfrage absenden</button>
-<button type="reset" class="secondary">Zurücksetzen</button>
+<div id="status" class="status"></div>
+
+<button type="submit" id="submitButton">
+    Umfrage absenden
+</button>
+
+<button type="reset" class="secondary">
+    Zurücksetzen
+</button>
 
 </form>
 
 <section id="success" class="success hidden">
     <h2>Vielen Dank! 🎉</h2>
-    <p>Deine Antworten wurden übermittelt.</p>
+
+    <p>
+        Deine Antworten wurden erfolgreich übermittelt.
+    </p>
+
     <button onclick="newSurvey()" class="secondary">
         Neue Umfrage starten
     </button>
@@ -162,16 +191,18 @@ footer {
 <script>
 
 // ==========================================
-// HIER DEINE GOOGLE APPS SCRIPT URL EINFÜGEN
+// GOOGLE APPS SCRIPT URL
 // ==========================================
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyac8ZTlsMfx7XLs9cHzHN7giJztN6KC0RlMAoKL3PDSXIWb5cbbY9N0jV-qoT3_cBI6A/exec";
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyac8ZTlsMfx7XLs9cHzHN7giJztN6KC0RlMAoKL3PDSXIWb5cbbY9N0jV-qoT3_cBI6A/exec";
 
 // ==========================================
-// FRAGEN DER UMFRAGE
+// FRAGEN
 // ==========================================
 
 const questions = [
+
 {
     title: "Wie alt bist du?",
     options: [
@@ -182,6 +213,7 @@ const questions = [
         "20 Jahre oder älter"
     ]
 },
+
 {
     title: "Wie viel Sport treibst du pro Woche?",
     options: [
@@ -192,6 +224,7 @@ const questions = [
         "Mehr als 10 Stunden"
     ]
 },
+
 {
     title: "Betreibst du Leistungssport?",
     options: [
@@ -200,6 +233,7 @@ const questions = [
         "Ich betreibe Vereinssport, aber keinen Leistungssport"
     ]
 },
+
 {
     title: "Wie viel Zeit investierst du pro Woche in Schule und Lernen?",
     options: [
@@ -209,6 +243,7 @@ const questions = [
         "Mehr als 10 Stunden"
     ]
 },
+
 {
     title: "Wie würdest du deine schulischen Leistungen einschätzen?",
     options: [
@@ -219,6 +254,7 @@ const questions = [
         "Mangelhaft"
     ]
 },
+
 {
     title: "Hat Sport deiner Meinung nach Einfluss auf deine schulischen Leistungen?",
     options: [
@@ -228,6 +264,7 @@ const questions = [
         "Ich bin mir nicht sicher"
     ]
 },
+
 {
     title: "Kannst du dich nach dem Sport gut auf schulische Aufgaben konzentrieren?",
     options: [
@@ -238,6 +275,7 @@ const questions = [
         "Sehr schlecht"
     ]
 },
+
 {
     title: "Hast du durch dein Training manchmal zu wenig Zeit zum Lernen?",
     options: [
@@ -248,6 +286,7 @@ const questions = [
         "Nie"
     ]
 },
+
 {
     title: "Hilft dir Sport dabei, Stress aus der Schule abzubauen?",
     options: [
@@ -258,6 +297,7 @@ const questions = [
         "Ich treibe keinen Sport"
     ]
 },
+
 {
     title: "Wie würdest du den Zusammenhang zwischen Sport und Schule bewerten?",
     options: [
@@ -268,13 +308,15 @@ const questions = [
         "Ich kann das nicht beurteilen"
     ]
 }
+
 ];
 
 // ==========================================
-// FRAGEN AUF DER SEITE ANZEIGEN
+// FRAGEN ERSTELLEN
 // ==========================================
 
-const questionContainer = document.getElementById("questions");
+const questionContainer =
+document.getElementById("questions");
 
 questions.forEach((q, index) => {
 
@@ -282,7 +324,9 @@ questions.forEach((q, index) => {
     section.className = "question";
 
     const title = document.createElement("h3");
-    title.textContent = (index + 1) + ". " + q.title;
+
+    title.textContent =
+    (index + 1) + ". " + q.title;
 
     section.appendChild(title);
 
@@ -292,70 +336,101 @@ questions.forEach((q, index) => {
         label.className = "option";
 
         const input = document.createElement("input");
+
         input.type = "radio";
         input.name = "question" + index;
         input.value = option;
         input.required = true;
 
         label.appendChild(input);
-        label.appendChild(document.createTextNode(option));
+
+        label.appendChild(
+            document.createTextNode(option)
+        );
 
         section.appendChild(label);
+
     });
 
     questionContainer.appendChild(section);
+
 });
 
 // ==========================================
-// ANTWORTEN AN GOOGLE TABELLEN SENDEN
+// UMFRAGE ABSENDEN
 // ==========================================
 
-let answers = [];
-
-document.getElementById("survey").addEventListener("submit", async function(e) {
+document.getElementById("survey")
+.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
-    if (SCRIPT_URL === "HIER_DEINE_WEB_APP_URL_EINFUEGEN") {
-        alert("Bitte füge zuerst deine Google Apps Script URL in den Code ein.");
-        return;
-    }
+    const form = this;
+    const submitButton =
+    document.getElementById("submitButton");
 
-    const formData = new FormData(this);
+    const status =
+    document.getElementById("status");
 
-    answers = questions.map((q, index) =>
+    const formData = new FormData(form);
+
+    const answers = questions.map((q, index) =>
         formData.get("question" + index)
     );
 
-    const submitButton = this.querySelector('button[type="submit"]');
+    if (answers.some(answer => !answer)) {
+        alert("Bitte beantworte alle Fragen.");
+        return;
+    }
 
     submitButton.disabled = true;
     submitButton.textContent = "Wird gesendet...";
 
+    status.style.display = "none";
+    status.textContent = "";
+    status.className = "status";
+
     try {
 
         await fetch(SCRIPT_URL, {
+
             method: "POST",
+
             mode: "no-cors",
+
             headers: {
                 "Content-Type": "text/plain;charset=utf-8"
             },
+
             body: JSON.stringify({
                 answers: answers
             })
+
         });
 
-        document.getElementById("survey").classList.add("hidden");
-        document.getElementById("success").classList.remove("hidden");
+        // Bei no-cors ist die Antwort nicht lesbar.
+        // Der Browser kann daher den tatsächlichen
+        // Speichervorgang nicht bestätigen.
+
+        document.getElementById("survey")
+        .classList.add("hidden");
+
+        document.getElementById("success")
+        .classList.remove("hidden");
 
         window.scrollTo(0, 0);
 
     } catch (error) {
 
-        alert("Die Übertragung ist fehlgeschlagen. Bitte versuche es erneut.");
+        status.textContent =
+        "Die Übertragung ist fehlgeschlagen. Bitte versuche es erneut.";
+
+        status.classList.add("error");
 
         submitButton.disabled = false;
-        submitButton.textContent = "Umfrage absenden";
+
+        submitButton.textContent =
+        "Umfrage absenden";
 
     }
 
@@ -367,20 +442,33 @@ document.getElementById("survey").addEventListener("submit", async function(e) {
 
 function newSurvey() {
 
-    document.getElementById("survey").reset();
+    const form =
+    document.getElementById("survey");
 
-    document.getElementById("survey").classList.remove("hidden");
+    form.reset();
 
-    document.getElementById("success").classList.add("hidden");
+    form.classList.remove("hidden");
 
-    const submitButton = document.querySelector('#survey button[type="submit"]');
+    document.getElementById("success")
+    .classList.add("hidden");
+
+    document.getElementById("status")
+    .style.display = "none";
+
+    const submitButton =
+    document.getElementById("submitButton");
+
     submitButton.disabled = false;
-    submitButton.textContent = "Umfrage absenden";
+
+    submitButton.textContent =
+    "Umfrage absenden";
 
     window.scrollTo(0, 0);
+
 }
 
 </script>
 
 </body>
 </html>
+
