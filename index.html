@@ -91,6 +91,11 @@ button:hover {
     background: #17365d;
 }
 
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
 .secondary {
     background: #dce4ee;
     color: #17365d;
@@ -142,10 +147,7 @@ footer {
 
 <section id="success" class="success hidden">
     <h2>Vielen Dank! 🎉</h2>
-    <p>Deine Antworten wurden zusammengestellt.</p>
-    <button onclick="downloadCSV()">
-        Antworten herunterladen
-    </button>
+    <p>Deine Antworten wurden übermittelt.</p>
     <button onclick="newSurvey()" class="secondary">
         Neue Umfrage starten
     </button>
@@ -158,6 +160,16 @@ footer {
 </footer>
 
 <script>
+
+// ==========================================
+// HIER DEINE GOOGLE APPS SCRIPT URL EINFÜGEN
+// ==========================================
+
+const SCRIPT_URL = "HIER_DEINE_WEB_APP_URL_EINFUEGEN";
+
+// ==========================================
+// FRAGEN DER UMFRAGE
+// ==========================================
 
 const questions = [
 {
@@ -258,6 +270,10 @@ const questions = [
 }
 ];
 
+// ==========================================
+// FRAGEN AUF DER SEITE ANZEIGEN
+// ==========================================
+
 const questionContainer = document.getElementById("questions");
 
 questions.forEach((q, index) => {
@@ -288,56 +304,78 @@ questions.forEach((q, index) => {
     });
 
     questionContainer.appendChild(section);
-
 });
+
+// ==========================================
+// ANTWORTEN AN GOOGLE TABELLEN SENDEN
+// ==========================================
 
 let answers = [];
 
-document.getElementById("survey").addEventListener("submit", function(e) {
+document.getElementById("survey").addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
+    if (SCRIPT_URL === "HIER_DEINE_WEB_APP_URL_EINFUEGEN") {
+        alert("Bitte füge zuerst deine Google Apps Script URL in den Code ein.");
+        return;
+    }
+
     const formData = new FormData(this);
 
-    answers = questions.map((q, index) => [
-        q.title,
+    answers = questions.map((q, index) =>
         formData.get("question" + index)
-    ]);
+    );
 
-    document.getElementById("survey").classList.add("hidden");
-    document.getElementById("success").classList.remove("hidden");
+    const submitButton = this.querySelector('button[type="submit"]');
 
-    window.scrollTo(0, 0);
+    submitButton.disabled = true;
+    submitButton.textContent = "Wird gesendet...";
+
+    try {
+
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                answers: answers
+            })
+        });
+
+        document.getElementById("survey").classList.add("hidden");
+        document.getElementById("success").classList.remove("hidden");
+
+        window.scrollTo(0, 0);
+
+    } catch (error) {
+
+        alert("Die Übertragung ist fehlgeschlagen. Bitte versuche es erneut.");
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Umfrage absenden";
+
+    }
 
 });
 
-function downloadCSV() {
-
-    let csv = "Frage;Antwort\n";
-
-    answers.forEach(row => {
-        csv += row.map(value =>
-            '"' + value.replaceAll('"', '""') + '"'
-        ).join(";") + "\n";
-    });
-
-    const blob = new Blob(["\ufeff" + csv], {
-        type: "text/csv;charset=utf-8"
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "umfrage_ergebnisse.csv";
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-}
+// ==========================================
+// NEUE UMFRAGE STARTEN
+// ==========================================
 
 function newSurvey() {
 
     document.getElementById("survey").reset();
+
     document.getElementById("survey").classList.remove("hidden");
+
     document.getElementById("success").classList.add("hidden");
+
+    const submitButton = document.querySelector('#survey button[type="submit"]');
+    submitButton.disabled = false;
+    submitButton.textContent = "Umfrage absenden";
 
     window.scrollTo(0, 0);
 }
