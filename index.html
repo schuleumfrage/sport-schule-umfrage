@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -91,6 +91,11 @@ button:hover {
     background: #17365d;
 }
 
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .secondary {
     background: #dce4ee;
     color: #17365d;
@@ -120,14 +125,17 @@ footer {
 
 <section class="intro">
     <h2>Deine Meinung ist gefragt!</h2>
+
     <p>
         Diese Umfrage ist anonym und dauert ungefähr
         3–5 Minuten.
     </p>
+
     <p>
         Die Ergebnisse werden ausschließlich für eine
         schulische Projektarbeit verwendet.
     </p>
+
     <strong>Bitte beantworte alle Fragen ehrlich.</strong>
 </section>
 
@@ -135,20 +143,27 @@ footer {
 
 <div id="questions"></div>
 
-<button type="submit">Umfrage absenden</button>
-<button type="reset" class="secondary">Zurücksetzen</button>
+<button type="submit" id="submitButton">
+    Umfrage absenden
+</button>
+
+<button type="reset" class="secondary" id="resetButton">
+    Zurücksetzen
+</button>
 
 </form>
 
 <section id="success" class="success hidden">
     <h2>Vielen Dank! 🎉</h2>
-    <p>Deine Antworten wurden zusammengestellt.</p>
-    <button onclick="downloadCSV()">
-        Antworten herunterladen
-    </button>
-    <button onclick="newSurvey()" class="secondary">
-        Neue Umfrage starten
-    </button>
+
+    <p>
+        Vielen Dank für deine Teilnahme!
+        Deine Antworten wurden übermittelt.
+    </p>
+
+    <p>
+        Du kannst diese Seite jetzt schließen.
+    </p>
 </section>
 
 </div>
@@ -158,6 +173,8 @@ footer {
 </footer>
 
 <script>
+
+// FRAGEN DER UMFRAGE
 
 const questions = [
 {
@@ -258,19 +275,27 @@ const questions = [
 }
 ];
 
-    
+
+// GOOGLE APPS SCRIPT VERBINDUNG
+
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCCDHDw9rsbWf6s18F9hDOssmbBjPxHdaEw584EAa0NCDsNQjAniuvBt8ZPmKikg2aXg/exec";
 
+
 async function sendAnswersToGoogle(data) {
-  await fetch(SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify(data)
-  });
+
+    await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+    });
+
 }
+
+
+// FRAGEN AUTOMATISCH ERSTELLEN
 
 const questionContainer = document.getElementById("questions");
 
@@ -290,6 +315,7 @@ questions.forEach((q, index) => {
         label.className = "option";
 
         const input = document.createElement("input");
+
         input.type = "radio";
         input.name = "question" + index;
         input.value = option;
@@ -299,64 +325,62 @@ questions.forEach((q, index) => {
         label.appendChild(document.createTextNode(option));
 
         section.appendChild(label);
+
     });
 
     questionContainer.appendChild(section);
 
 });
 
-let answers = [];
 
-document.getElementById("survey").addEventListener("submit", function(e) {
+// UMFRAGE ABSENDEN
+
+document.getElementById("survey").addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
-    const formData = new FormData(this);
+    const form = this;
+    const button = document.getElementById("submitButton");
+    const resetButton = document.getElementById("resetButton");
 
-    answers = questions.map((q, index) => [
+    const formData = new FormData(form);
+
+    const answers = questions.map((q, index) => [
         q.title,
         formData.get("question" + index)
     ]);
 
-    document.getElementById("survey").classList.add("hidden");
-    document.getElementById("success").classList.remove("hidden");
+    button.disabled = true;
+    resetButton.disabled = true;
+    button.textContent = "Wird übermittelt...";
 
-    window.scrollTo(0, 0);
+    try {
+
+        await sendAnswersToGoogle(answers);
+
+        // Formular ausblenden
+        form.classList.add("hidden");
+
+        // Dankesnachricht anzeigen
+        document.getElementById("success").classList.remove("hidden");
+
+        // Nach oben scrollen
+        window.scrollTo(0, 0);
+
+    } catch (error) {
+
+        alert("Die Übermittlung ist fehlgeschlagen. Bitte versuche es erneut.");
+
+        button.disabled = false;
+        resetButton.disabled = false;
+        button.textContent = "Umfrage absenden";
+
+    }
 
 });
-
-function downloadCSV() {
-
-    let csv = "Frage;Antwort\n";
-
-    answers.forEach(row => {
-        csv += row.map(value =>
-            '"' + value.replaceAll('"', '""') + '"'
-        ).join(";") + "\n";
-    });
-
-    const blob = new Blob(["\ufeff" + csv], {
-        type: "text/csv;charset=utf-8"
-    });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "umfrage_ergebnisse.csv";
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-}
-
-function newSurvey() {
-
-    document.getElementById("survey").reset();
-    document.getElementById("survey").classList.remove("hidden");
-    document.getElementById("success").classList.add("hidden");
-
-    window.scrollTo(0, 0);
-}
 
 </script>
 
 </body>
 </html>
+```
