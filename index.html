@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sport und Schule – Umfrage</title>
+<title>Umfrage – Leistungssport und Schule</title>
 
 <style>
 * {
@@ -14,25 +14,24 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #dbeafe, #eff6ff);
-    color: #1e293b;
+    background: #f1f5f9;
+    color: #263445;
 }
 
 header {
     background: linear-gradient(135deg, #17365d, #2867a8);
     color: white;
-    text-align: center;
     padding: 45px 20px;
+    text-align: center;
 }
 
 header h1 {
-    font-size: 30px;
-    margin: 0 0 12px;
+    font-size: 32px;
+    margin-bottom: 10px;
 }
 
 header p {
-    font-size: 16px;
-    margin: 0;
+    font-size: 17px;
 }
 
 .container {
@@ -41,68 +40,47 @@ header p {
     padding: 0 15px;
 }
 
-.card {
+.intro, .question, .success {
     background: white;
-    padding: 25px;
-    margin-bottom: 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    padding: 22px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
 }
 
 h2 {
     color: #17365d;
 }
 
-.question {
-    margin-bottom: 25px;
-}
-
 .question h3 {
-    font-size: 17px;
-    margin-bottom: 14px;
+    font-size: 18px;
+    margin-top: 0;
 }
 
 .option {
     display: block;
-    padding: 12px;
+    padding: 11px;
     margin: 8px 0;
     border: 1px solid #dce4ee;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .option:hover {
-    background: #eff6ff;
-    border-color: #2867a8;
+    background: #edf4fb;
 }
 
 .option input {
     margin-right: 10px;
-    accent-color: #2563eb;
-}
-
-.progress-bg {
-    height: 9px;
-    background: #e2e8f0;
-    border-radius: 10px;
-    margin: 15px 0;
-}
-
-.progress {
-    height: 9px;
-    width: 0;
-    background: #2563eb;
-    border-radius: 10px;
-    transition: width 0.3s;
+    accent-color: #2867a8;
 }
 
 button {
     padding: 14px 22px;
-    background: #2563eb;
-    color: white;
     border: none;
-    border-radius: 9px;
+    border-radius: 8px;
+    background: #2867a8;
+    color: white;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -113,53 +91,20 @@ button:hover {
     background: #17365d;
 }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
-
 .secondary {
-    background: #e2e8f0;
+    background: #dce4ee;
     color: #17365d;
-}
-
-textarea, select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: Arial, sans-serif;
-}
-
-textarea {
-    resize: vertical;
 }
 
 .hidden {
     display: none;
 }
 
-.success {
-    text-align: center;
-    padding: 40px 20px;
-}
-
 footer {
     text-align: center;
-    color: #64748b;
     padding: 25px;
+    color: #66758a;
     font-size: 13px;
-}
-
-@media(max-width: 500px) {
-    header h1 {
-        font-size: 24px;
-    }
-
-    .card {
-        padding: 18px;
-    }
 }
 </style>
 </head>
@@ -167,83 +112,56 @@ footer {
 <body>
 
 <header>
-    <h1>🏃 Sport und Schule</h1>
-    <p>Wie beeinflusst Sport die schulischen Leistungen von Jugendlichen?</p>
+    <h1>Leistungssport und Schule</h1>
+    <p>Wie beeinflusst Leistungssport die schulischen Leistungen von Jugendlichen?</p>
 </header>
 
 <div class="container">
 
-<section class="card">
+<section class="intro">
     <h2>Deine Meinung ist gefragt!</h2>
     <p>
-        Diese Umfrage ist Teil einer schulischen Projektarbeit.
-        Deine Teilnahme ist freiwillig und anonym.
+        Diese Umfrage ist anonym und dauert ungefähr
+        3–5 Minuten.
     </p>
     <p>
-        Das Ausfüllen dauert ungefähr 3–5 Minuten.
+        Die Ergebnisse werden ausschließlich für eine
+        schulische Projektarbeit verwendet.
     </p>
     <strong>Bitte beantworte alle Fragen ehrlich.</strong>
 </section>
 
 <form id="survey">
 
-<section class="card">
-    <h2>Deine Umfrage</h2>
-    <p id="progressText">0 von 10 Fragen beantwortet</p>
-    <div class="progress-bg">
-        <div class="progress" id="progress"></div>
-    </div>
-</section>
-
 <div id="questions"></div>
 
-<section class="card">
-    <h3>11. Welche Herausforderung siehst du bei der Kombination von Sport und Schule?</h3>
-    <textarea id="herausforderung"
-        rows="4"
-        placeholder="Deine Antwort..."
-        required></textarea>
-</section>
-
-<section class="card">
-    <button type="submit" id="submitButton">
-        Umfrage absenden
-    </button>
-
-    <button type="reset" class="secondary">
-        Zurücksetzen
-    </button>
-
-    <p id="errorMessage" style="color:#dc2626"></p>
-</section>
+<button type="submit">Umfrage absenden</button>
+<button type="reset" class="secondary">Zurücksetzen</button>
 
 </form>
 
-<section id="success" class="card success hidden">
-    <h1>🎉 Vielen Dank!</h1>
-    <h2>Deine Teilnahme wurde übermittelt.</h2>
-    <p>
-        Vielen Dank, dass du dir Zeit für unsere
-        schulische Umfrage genommen hast!
-    </p>
+<section id="success" class="success hidden">
+    <h2>Vielen Dank! 🎉</h2>
+    <p>Deine Antworten wurden zusammengestellt.</p>
+    <button onclick="downloadCSV()">
+        Antworten herunterladen
+    </button>
+    <button onclick="newSurvey()" class="secondary">
+        Neue Umfrage starten
+    </button>
 </section>
 
 </div>
 
 <footer>
-    Schulische Projektarbeit · Sport und Schule
+    Schulische Projektarbeit · Anonyme Umfrage
 </footer>
 
 <script>
 
-// HIER DEINE GOOGLE APPS SCRIPT URL EINFÜGEN
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxm6sFQNNsByQAWgKxXtwCT1Hw6TdtZtRxyXpVZg36Ny-MJPXlJfe30ehr1Ysz1H4n8/exec";
-
-
 const questions = [
 {
-    key: "alter",
-    title: "1. Wie alt bist du?",
+    title: "Wie alt bist du?",
     options: [
         "Unter 14 Jahre",
         "14–15 Jahre",
@@ -253,28 +171,9 @@ const questions = [
     ]
 },
 {
-    key: "sport",
-    title: "2. Treibst du regelmäßig Sport?",
+    title: "Wie viel Sport treibst du pro Woche?",
     options: [
-        "Ja",
-        "Nein",
-        "Gelegentlich"
-    ]
-},
-{
-    key: "leistungssport",
-    title: "3. Betreibst du Leistungssport?",
-    options: [
-        "Ja",
-        "Nein",
-        "Ich betreibe Vereinssport, aber keinen Leistungssport"
-    ]
-},
-{
-    key: "training",
-    title: "4. Wie viele Stunden trainierst du pro Woche?",
-    options: [
-        "Kein Training",
+        "Gar keinen Sport",
         "1–3 Stunden",
         "4–6 Stunden",
         "7–10 Stunden",
@@ -282,52 +181,24 @@ const questions = [
     ]
 },
 {
-    key: "wirkung",
-    title: "5. Wie wirkt sich Sport deiner Meinung nach auf die Schule aus?",
+    title: "Betreibst du Leistungssport?",
     options: [
-        "Sehr positiv",
-        "Eher positiv",
-        "Gar nicht",
-        "Eher negativ",
-        "Sehr negativ"
+        "Ja",
+        "Nein",
+        "Ich betreibe Vereinssport, aber keinen Leistungssport"
     ]
 },
 {
-    key: "lernzeit",
-    title: "6. Hast du durch Sport manchmal weniger Zeit zum Lernen?",
+    title: "Wie viel Zeit investierst du pro Woche in Schule und Lernen?",
     options: [
-        "Sehr häufig",
-        "Häufig",
-        "Manchmal",
-        "Selten",
-        "Nie"
+        "Unter 2 Stunden",
+        "2–5 Stunden",
+        "6–10 Stunden",
+        "Mehr als 10 Stunden"
     ]
 },
 {
-    key: "vereinbarkeit",
-    title: "7. Kannst du Sport und Schule gut miteinander vereinbaren?",
-    options: [
-        "Sehr gut",
-        "Gut",
-        "Mittelmäßig",
-        "Eher schlecht",
-        "Sehr schlecht"
-    ]
-},
-{
-    key: "konzentration",
-    title: "8. Wie gut kannst du dich nach dem Sport auf Hausaufgaben konzentrieren?",
-    options: [
-        "Sehr gut",
-        "Gut",
-        "Mittelmäßig",
-        "Eher schlecht",
-        "Sehr schlecht"
-    ]
-},
-{
-    key: "noten",
-    title: "9. Wie würdest du deine schulischen Leistungen einschätzen?",
+    title: "Wie würdest du deine schulischen Leistungen einschätzen?",
     options: [
         "Sehr gut",
         "Gut",
@@ -337,28 +208,65 @@ const questions = [
     ]
 },
 {
-    key: "herausforderung",
-    title: "10. Was ist für dich die größte Herausforderung bei Sport und Schule?",
+    title: "Hat Sport deiner Meinung nach Einfluss auf deine schulischen Leistungen?",
     options: [
-        "Zeitmanagement",
-        "Müdigkeit und Erschöpfung",
-        "Wenig Freizeit",
-        "Schulischer Leistungsdruck",
-        "Keine besonderen Schwierigkeiten"
+        "Ja, einen positiven Einfluss",
+        "Ja, einen negativen Einfluss",
+        "Nein, keinen Einfluss",
+        "Ich bin mir nicht sicher"
+    ]
+},
+{
+    title: "Kannst du dich nach dem Sport gut auf schulische Aufgaben konzentrieren?",
+    options: [
+        "Sehr gut",
+        "Gut",
+        "Mittelmäßig",
+        "Eher schlecht",
+        "Sehr schlecht"
+    ]
+},
+{
+    title: "Hast du durch dein Training manchmal zu wenig Zeit zum Lernen?",
+    options: [
+        "Sehr häufig",
+        "Häufig",
+        "Manchmal",
+        "Selten",
+        "Nie"
+    ]
+},
+{
+    title: "Hilft dir Sport dabei, Stress aus der Schule abzubauen?",
+    options: [
+        "Ja, sehr",
+        "Ja, etwas",
+        "Kaum",
+        "Nein",
+        "Ich treibe keinen Sport"
+    ]
+},
+{
+    title: "Wie würdest du den Zusammenhang zwischen Sport und Schule bewerten?",
+    options: [
+        "Sport verbessert meine schulischen Leistungen",
+        "Sport verschlechtert meine schulischen Leistungen",
+        "Sport hat keinen Einfluss",
+        "Es kommt auf die Menge und Intensität des Sports an",
+        "Ich kann das nicht beurteilen"
     ]
 }
 ];
 
-const questionContainer =
-    document.getElementById("questions");
+const questionContainer = document.getElementById("questions");
 
 questions.forEach((q, index) => {
 
     const section = document.createElement("section");
-    section.className = "card question";
+    section.className = "question";
 
     const title = document.createElement("h3");
-    title.textContent = q.title;
+    title.textContent = (index + 1) + ". " + q.title;
 
     section.appendChild(title);
 
@@ -369,11 +277,9 @@ questions.forEach((q, index) => {
 
         const input = document.createElement("input");
         input.type = "radio";
-        input.name = q.key;
+        input.name = "question" + index;
         input.value = option;
         input.required = true;
-
-        input.addEventListener("change", updateProgress);
 
         label.appendChild(input);
         label.appendChild(document.createTextNode(option));
@@ -382,99 +288,59 @@ questions.forEach((q, index) => {
     });
 
     questionContainer.appendChild(section);
+
 });
 
+let answers = [];
 
-function updateProgress() {
+document.getElementById("survey").addEventListener("submit", function(e) {
 
-    const answered = questions.filter(q =>
-        document.querySelector(
-            'input[name="' + q.key + '"]:checked'
-        )
-    ).length;
+    e.preventDefault();
 
-    document.getElementById("progress").style.width =
-        (answered / questions.length * 100) + "%";
+    const formData = new FormData(this);
 
-    document.getElementById("progressText").textContent =
-        answered + " von " + questions.length +
-        " Fragen beantwortet";
-}
+    answers = questions.map((q, index) => [
+        q.title,
+        formData.get("question" + index)
+    ]);
 
+    document.getElementById("survey").classList.add("hidden");
+    document.getElementById("success").classList.remove("hidden");
 
-// UMFRAGE ABSENDEN
+    window.scrollTo(0, 0);
 
-document.getElementById("survey")
-.addEventListener("submit", async function(event) {
+});
 
-    event.preventDefault();
+function downloadCSV() {
 
-    const button = document.getElementById("submitButton");
-    const error = document.getElementById("errorMessage");
+    let csv = "Frage;Antwort\n";
 
-    error.textContent = "";
-
-    if (SCRIPT_URL.includes("HIER_DEINE")) {
-        error.textContent =
-            "Bitte trage zuerst deine Apps-Script-URL ein.";
-        return;
-    }
-
-    const data = {};
-
-    questions.forEach(q => {
-        const selected = document.querySelector(
-            'input[name="' + q.key + '"]:checked'
-        );
-
-        data[q.key] = selected ? selected.value : "";
+    answers.forEach(row => {
+        csv += row.map(value =>
+            '"' + value.replaceAll('"', '""') + '"'
+        ).join(";") + "\n";
     });
 
-    data.herausforderung =
-        document.getElementById("herausforderung").value;
+    const blob = new Blob(["\ufeff" + csv], {
+        type: "text/csv;charset=utf-8"
+    });
 
-    button.disabled = true;
-    button.textContent = "Wird gesendet...";
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "umfrage_ergebnisse.csv";
+    link.click();
 
-    try {
+    URL.revokeObjectURL(link.href);
+}
 
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify(data)
-        });
+function newSurvey() {
 
-        document.getElementById("survey")
-            .classList.add("hidden");
+    document.getElementById("survey").reset();
+    document.getElementById("survey").classList.remove("hidden");
+    document.getElementById("success").classList.add("hidden");
 
-        document.getElementById("success")
-            .classList.remove("hidden");
-
-        window.scrollTo(0, 0);
-
-    } catch (err) {
-
-        error.textContent =
-            "Es gab einen Fehler beim Senden. Bitte versuche es erneut.";
-
-        button.disabled = false;
-        button.textContent = "Umfrage absenden";
-    }
-
-});
-
-
-// ZURÜCKSETZEN
-
-document.getElementById("survey")
-.addEventListener("reset", function() {
-
-    setTimeout(updateProgress, 0);
-
-});
+    window.scrollTo(0, 0);
+}
 
 </script>
 
