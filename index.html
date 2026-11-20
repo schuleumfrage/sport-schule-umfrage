@@ -258,6 +258,20 @@ const questions = [
 }
 ];
 
+    
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCCDHDw9rsbWf6s18F9hDOssmbBjPxHdaEw584EAa0NCDsNQjAniuvBt8ZPmKikg2aXg/exec";
+
+async function sendAnswersToGoogle(data) {
+  await fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  });
+}
+
 const questionContainer = document.getElementById("questions");
 
 questions.forEach((q, index) => {
